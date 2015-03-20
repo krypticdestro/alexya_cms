@@ -1,0 +1,23 @@
+<theme>
+	<info>
+		<name>Alexya</name>
+		<author>Kryptic Destro</author>
+		<version>1.0</version>
+		<date>
+			<day>19</day>
+			<month>03</month>
+			<year>2015</year>
+		</date>
+		<description>This is Alexya's main theme.
+By default will be used in every alexya website.
+		</description>
+		<homepage>http://krypticdestro.hol.es/</homepage>
+	</info>
+	<paths>
+		<includes>{theme_path}includes/</includes>
+		<css>/{theme_path}files/css/</css>
+		<js>/{theme_path}files/js/</js>
+		<img>/{theme_path}files/img/</img>
+		<fonts>/{theme_path}files/fonts/</fonts>
+	</paths>
+</theme>
