@@ -1,0 +1,13 @@
+            <h2>
+                <a href="{$Alexya->url}post/{$post["permalink"]}/">{$post["title"]}</a>
+            </h2>
+            <p class="lead">
+                by <a href="{$Alexya->url}user/{$author["username"]}">{$author["username"]}</a> on {$category}
+            </p>
+            <p><span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}</p>
+            <hr>
+            <img class="img-responsive" src="{$post["image"]}" alt="">
+            <hr>
+            <p>{Functions::trim_text($post["content"])}</p>
+            <a class="btn btn-primary" href="{$Alexya->url}/post/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <hr>

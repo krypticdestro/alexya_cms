@@ -1,9 +1,62 @@
-
+			</div>
+	        <!-- Blog Sidebar Widgets Column -->
+	        <div class="col-md-4">
+	            <!-- Blog Search Well -->
+	            <div class="well">
+	                <h4>Blog Search</h4>
+	                <div class="input-group">
+	                    <input type="text" class="form-control">
+	                    <span class="input-group-btn">
+	                        <button class="btn btn-default" type="button">
+	                            <span class="glyphicon glyphicon-search"></span>
+	                        </button>
+	                    </span>
+	                </div> <!-- /.input-group -->
+	            </div>
+	            <!-- Blog Categories Well -->
+	            <div class="well">
+	                <h4>Blog Categories</h4>
+	                    <div class="row">
+	                        <div class="col-lg-6">
+	                            <ul class="list-unstyled">
+	                    {foreach from=$database->get("categories") item=cat name=cat_sidebar}
+	                                <li><a href="{$Alexya->url}category/{$cat["permalink"]}">{$cat["name"]}</a></li>
+	                        {if ($smarty.foreach.cat_sidebar.iteration % 6) == 0}
+	                        	</ul>
+	                        </div> <!-- /.col-lg-6 -->
+	                        <div class="col-lg-6">
+	                            <ul class="list-unstyled">
+	                        {/if}
+	                    {/foreach}
+	                            </ul>
+	                        </div> <!-- /.col-lg-6 -->
+	                    </div> <!-- /.row -->
+	                </div>
+	                <!-- Side Widget Well -->
+	                <div class="well">
+	                    <h4>Side Widget Well</h4>
+	                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
+	                </div>
+	            </div>
+	        </div>
+	        <!-- /.row -->
 			<hr>
 			<!-- Footer -->
 			<footer>
 				<div class="row">
 					<div class="col-lg-12">
+				{foreach from=Results::get() item=result name=results}
+						<div class="alert alert-{$result["result"]} alert-dismissible">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+  							{$result["message"]}
+  						</div>
+				{foreachelse}
+						<div class="alert alert-info alert-dismissible">
+  							<button type="button" class="close" data-dismiss="alert">&times;</button>
+  							No results!
+  						</div>
+						{Functions::dump_session()}
+				{/foreach}
 						<p>Copyright &copy; Powered by Alexya</p>
 					</div>
 					<!-- /.col-lg-12 -->

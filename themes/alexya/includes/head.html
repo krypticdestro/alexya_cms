@@ -19,3 +19,39 @@
 		<![endif]-->
 	</head>
 	<body>
+         <!-- Navigation -->
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">{$Alexya->site_name}</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                    {foreach from=$menu item=item name=menu}
+                        <li>
+                            <a href="{$item["link"]}">{$item["text"]}</a>
+                        </li>
+                    {/foreach}
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container -->
+        </nav>
+        <!-- Page Content -->
+        <div class="container">
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+                <h1 class="page-header">
+                    {$Alexya->site_name}<br/>
+                    <small>{$Alexya->site_description}</small>
+                </h1>

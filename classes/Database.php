@@ -24,7 +24,7 @@ class Database extends mysqli
 	 * @param mixed socket: idk why I put this shit xD
 	*/
 	public function __construct($host = 'localhost', $user = 'root', $pass = '',
-								$db = "", $port = 3360, $socket = null)
+								$db = "", $port = 3306, $socket = null)
 	{
 		// execute parent constructor that will try to connect,
 		// use @ operator, to supress any error output
@@ -97,16 +97,20 @@ class Database extends mysqli
 	public function getID($key)
 	{
 		$array = array(
-			"accounts"		=> "userID",
+			"users"			=> "userID",
 			"comments"		=> "commentID",
-			"downloads"		=> "downloadID",
-			"news"			=> "newsID",
+			"posts"			=> "postID",
+			"categories"	=> "categoryID",
+			"menu"			=> "itemID",
 		);
 		if(isset($array, $key)) {
 			return $array[$key];
 		} else {
-			if(debug) {
-				echo "Couldn't get $key from the array at Database::getID(string)";
+			if(DEBUG) {
+				Results::addFlash(array(
+							"result"  => "error",
+							"message" => "Couldn't get $key from the array at Database::getID(string)"
+						));
 			}
 		}
 	}

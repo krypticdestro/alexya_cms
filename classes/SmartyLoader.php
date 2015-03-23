@@ -61,4 +61,15 @@ class SmartyLoader extends Smarty
             $this->add($key, $val);
         }
     }
+    
+    /**
+     * Instances and returns an object
+     * 
+     * @param string name object name
+     * @param mixed param params to send to constructor
+     */
+    public static function instance_object($name, $param)
+    {
+        return new $name($param);
+    }
 }

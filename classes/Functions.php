@@ -56,10 +56,10 @@ class Functions
 	 * @param bool $strip_html if html tags are to be stripped
 	 * @return string
 	 */
-	public static function trim_text($input, $length, $ellipses = true, $strip_html = true) {
+	public static function trim_text($input, $length = 500, $ellipses = "[...]", $strip_html = true) {
 	    //strip tags, if desired
 	    if ($strip_html) {
-	        $input = $this->parseHtml($input);
+	        $input = Functions::rip_tags($input);
 	    }
 	  
 	    //no need to trim, already shorter than trim length
@@ -72,11 +72,40 @@ class Functions
 	    $trimmed_text = substr($input, 0, $last_space);
 	  
 	    //add ellipses (...)
-	    if ($ellipses) {
-	        $trimmed_text .= '[...]';
+	    if (is_string($ellipses)) {
+	        $trimmed_text .= $ellipses;
 	    }
 	  
 	    return $trimmed_text;
+	}
+	
+	/**
+	 * Strips HTML tags
+	 * 
+	 * Receives a string as parameter and returns the same string
+	 * without HTML tags, it's an improved alternative to strip_tags()
+	 * 
+	 * I found it in php documentation: http://php.net/manual/es/function.strip-tags.php#110280
+	 * 
+	 * @param string str string to delete tags
+	 * 
+	 * @return str without html tags
+	 */
+	public static function rip_tags($str)
+	{
+	    // ----- remove HTML TAGs -----
+	    $string = preg_replace ('/<[^>]*>/', ' ', $str);
+	   
+	    // ----- remove control characters -----
+	    $string = str_replace("\r", '', $string);    // --- replace with empty space
+	    $string = str_replace("\n", ' ', $string);   // --- replace with space
+	    $string = str_replace("\t", ' ', $string);   // --- replace with space
+	   
+	    // ----- remove multiple spaces -----
+	    $string = trim(preg_replace('/ {2,}/', ' ', $string));
+	   
+	    return $string;
+
 	}
 	    
 	/**
@@ -128,5 +157,13 @@ class Functions
     public static function getPercentage($maxStorage, $currentStorage) {
         $percentage = ($currentStorage * 100) / $maxStorage;
         return $percentage;
+    }
+    
+    /**
+     * Pure debug shit
+     */
+    public static function dump_session()
+    {
+    	var_dump($_SESSION);
     }
 }

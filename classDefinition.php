@@ -20,6 +20,7 @@ require_once(CLASSES."Controller.php");
 require_once(CLASSES."Database.php");
 require_once(CLASSES."SmartyLoader.php");
 require_once(CLASSES."Functions.php");
+require_once(CLASSES."Posts.php");
 require_once(CLASSES."Results.php");
 require_once(CLASSES."Security.php");
 require_once(CLASSES."Session.php");
@@ -30,6 +31,7 @@ require_once(OBJECTS."Alexya.php");
 require_once(OBJECTS."User.php");
 require_once(OBJECTS."DatabaseObject.php");
 require_once(OBJECTS."Theme.php");
+require_once(OBJECTS."Category.php");
 /* End Import Objects */
 
 /* Instance Objects */

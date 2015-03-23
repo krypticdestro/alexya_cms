@@ -19,10 +19,18 @@
  */
 define("DEBUG", true);
 
+/* Set error reporting */
+if(DEBUG) {
+    ini_set("display_errors", 1);
+    error_reporting(E_ALL);
+} else {
+    ini_set("display_errors", 0);
+}
+
 /**
  * Start and configure session settings
  */
-ini_set("session.name", "Alexya");
+ini_set("session.name", "Alexya CMS");
 session_start();
 /* End Global Configuration */
 
@@ -69,14 +77,14 @@ define("THEMES", ROOT."themes/");
  * 
  * Hostname or IP that hosts database
  */
-define("MYSQL_HOST", "localhost");
+define("MYSQL_HOST", "0.0.0.0");
 
 /**
  * Username
  * 
  * Username to access the database
  */
-define("MYSQL_USERNAME", "root");
+define("MYSQL_USERNAME", "krypticdestro");
 
 /**
  * Password
@@ -90,7 +98,7 @@ define("MYSQL_PASSWORD", "");
  * 
  * Database name
  */
-define("MYSQL_DATABASE", "alexya");
+define("MYSQL_DATABASE", "c9");
 /* End MySQL Settings */
 
 /* Start URL Settings */
@@ -99,7 +107,7 @@ define("MYSQL_DATABASE", "alexya");
  * 
  * Host that hosts Alexya CMS
  */
-define("HOST", "port-80.hau8kxjq2yqwu3di0k3jb0fhruihehfr2jex36xee5klnmi.box.codeanywhere.com");
+define("HOST", "alexya-cms-krypticdestro.c9.io");
 
 /**
  * Url

@@ -47,6 +47,7 @@ class Results
 	 */
 	public static function addFlash(array $result)
 	{
+		echo "result added, if you don't see a result in the footer I suck";
 		if(!isset($result["delete_if_not_show"])) {
 			$result["delete_if_not_show"] = true;
 		}
