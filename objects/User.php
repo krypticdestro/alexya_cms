@@ -29,7 +29,7 @@ class User
 				$this->data = $q;
 				
 				//Set messages
-				$outbox = $Database->get("messages", "WHERE authorID=".$q["userID"],
+				/*$outbox = $Database->get("messages", "WHERE authorID=".$q["userID"],
 											-1, "array");
 				$inbox = $Database->get("messages", "WHERE destinataryID=".$q["userID"],
 											-1, "array");
@@ -42,11 +42,16 @@ class User
 				
 				//Decode jsons
 				$this->data["friends"] = json_decode($q["firends"]);
+				*/
 				
 				//TODO add more shit
 			} else {
 				session_unset("sessionID");
-				Functions::redirect("index.php?page=login&error=1");
+				Results::addFlash(array(
+							"result" => "error",
+							"message" => "Couldn't find sessionID!"
+						));
+				//Functions::redirect("login/");
 			}
 		}
 	}
@@ -63,8 +68,8 @@ class User
 	 */
 	public function __get($key)
 	{
-        if(isset($this->data[$param])) {
-            return $this->data[$param];
+        if(isset($this->data[$key])) {
+            return $this->data[$key];
         }
         
         return false;
@@ -93,7 +98,7 @@ class User
 	
 	public function isAdmin()
 	{
-		if($this->get("rank") == 21) {
+		if($this->rank == 21) {
 			return true;
 		}
 		
@@ -106,7 +111,7 @@ class User
 	 */
 	public function isLogged()
 	{
-		if($this->get("userID")) {
+		if($this->userID) {
 			return true;
 		}
 		return false;

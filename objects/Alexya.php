@@ -26,6 +26,10 @@ class Alexya
         "site_description"  => "Alexya's CMS home", //Site description, it will be used by metatags
 		"site_keywords"		=> "Alexya, Blog, CMS, php, programming, kryptic destro", //SEO Keywords
         "is_private"        => true, //Is private, requires being logged in order to see the site
+        "max_username_length" => 32,
+        "min_username_length" => 4,
+        "max_password_length" => 32,
+        "min_password_legnth" => 4
     );
     
     /**

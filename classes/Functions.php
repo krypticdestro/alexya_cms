@@ -56,7 +56,9 @@ class Functions
 	 * @param bool $strip_html if html tags are to be stripped
 	 * @return string
 	 */
-	public static function trim_text($input, $length = 500, $ellipses = "[...]", $strip_html = true) {
+	public static function trim_text($input, $length = 500,
+									$ellipses = "[...]", $strip_html = true)
+	{
 	    //strip tags, if desired
 	    if ($strip_html) {
 	        $input = Functions::rip_tags($input);
@@ -166,4 +168,48 @@ class Functions
     {
     	var_dump($_SESSION);
     }
+    
+    /**
+     * Returns the directory of a give path
+     * 
+     * It receives a full path (directory + filename) and returns the directory
+     * 
+     * @param string path full path to file
+     * @return string file's directory
+     */
+    public static function getPath($path)
+    {
+    	if(strpos($path, "/") == false) {
+    		return "";
+    	}
+    	
+    	$result = explode("/", $path);
+    	unset($result[count($result) - 1]);
+    	
+    	$path = implode("/", $result)."/";
+    	
+    	return $path;
+    }
+    
+    public static function generateSessionID()
+	{
+		return self::generateRandom(32);
+	}
+    
+    public static function generateRandom($length, $numbers = true, $letters = false, $otherChars = ''){
+		$chars = '';
+		$chars .= ($numbers) ? '0123456789' : '';
+		$chars .= ($letters) ? 'QWERTYUIOPASDFGHJKLLZXCVBNMqwertyuiopasdfghjklzxcvbnm' : '';
+		$chars .= $otherChars;
+
+		$str = '';
+		$c = 0;
+		while ($c < $length){ 
+			$str .= substr($chars, rand(0, strlen($chars) -1), 1);
+			$c++;
+		}
+		
+		return $str;
+	}
+	
 }

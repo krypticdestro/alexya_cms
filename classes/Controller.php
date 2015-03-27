@@ -49,13 +49,34 @@ class Controller
 				echo "test function: ";
                 var_dump($params);
             },
+            
+            /**
+             * Generates and returns a sessionID
+             * 
+             * @see classes/Functions.php
+             */
+            "generate_sessionID" => "Functions::generateSessionID",
 			
 			/**
 			 * Register function
 			 *
-			 * @see clases/Session.php
+			 * @see classes/Session.php
 			 */
-			"register_user" => "Session::register"
+			"register" => "Session::register",
+			
+			/**
+			 * Login function
+			 * 
+			 * @see classes/Session.php
+			 */
+			"login" => "Session::login",
+			
+			/**
+			 * Check if user can access the website
+			 * 
+			 * @see classes/Security.php
+			 */
+			"check_user_has_access" => "Security::userHasAccess"
         );
     }
     

@@ -24,6 +24,7 @@ require_once(CLASSES."Posts.php");
 require_once(CLASSES."Results.php");
 require_once(CLASSES."Security.php");
 require_once(CLASSES."Session.php");
+require_once(CLASSES."EventController.php");
 /* End Import Classes */
 
 /* Start Import Objects */
@@ -71,6 +72,15 @@ $Alexya = new Alexya();
  * @see classes/Controller.php
  */
 $Controller = new Controller();
+
+/**
+ * EventController Object
+ * 
+ * Will handle URL events
+ * 
+ * @see classes/EventController.php
+ */
+$EventController = new EventController();
 
 /**
  * SmartyLoader Object

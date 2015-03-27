@@ -26,6 +26,13 @@ class Theme
 	private $name;
 	
 	/**
+	 * Array pages
+	 * 
+	 * Pages array
+	 */
+	private $pages;
+	
+	/**
 	 * Constructor
 	 *
 	 * @param string name theme's name
@@ -54,22 +61,32 @@ class Theme
 	 * Load method
 	 *
 	 * This method will try to load the given page.
-	 * if the page doesn't exists will redirect to ?page=home
+	 * if the page doesn't exists will redirect to home page
 	 *
 	 * @param string name page name
 	 */
 	public function load($name)
 	{
-		global $SmartyLoader;
+		global $Controller;
 		global $Alexya;
 		
-		if(file_exists(THEMES."$Alexya->theme_name/$name.html")) {
-			$SmartyLoader->load($this->paths->includes."head.html");
-			$SmartyLoader->load(THEMES.$Alexya->theme_name."/$name.html");
-			$SmartyLoader->load($this->paths->includes."foot.html");
+		$file = $this->getFile($name);
+		
+		if(is_string($file)) {
+			$Controller->load_page($file);
 		} else {
-			header("location: ?page=home");
-		}
+			$not_found = $this->getFile("404");
+			if(is_string($not_found)) {
+				$Controller->load_page($not_found);
+			} else {
+				$home_page = $this->getFile("home");
+				if(is_string($home_page)) {
+					Functions::redirect(URL."home/");
+				} else {
+					die("Your theme is shit, use another");
+				}
+			}
+		}//fool proof
 	}
 	
 	/**
@@ -84,9 +101,59 @@ class Theme
 	{
 		if(isset($this->data->$name)) {
 			if(strpos($name, "paths") != false) {
-				return THEMES.$Alexya->theme_name.$this->data->$name;
+				if(strpos($name, "pages") != false) {
+					return THEMES.$Alexya->theme_name.$this->data->$name;
+				}
+				return $this->pages;
 			}
 			return $this->data->$name;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Executes theme handler
+	 */
+	public function handler()
+	{
+		global $Alexya;
+		
+		if(file_exists(THEMES.$Alexya->theme_name."/".$this->handler)) {
+			define("HANDLER_PATH", THEMES.$Alexya->theme_name.
+									"/".Functions::getPath($this->handler));
+			require_once(THEMES.$Alexya->theme_name."/".$this->handler);
+		} else {
+			Results::addFlash(array(
+						"result" => "danger",
+						"message" => "Couldn't find theme handler, please reinstall the theme!"
+					));
+		}
+	}
+	
+	/**
+	 * Sets pages array
+	 * 
+	 * @param array pages array containing pages list
+	 */
+	public function setPages($pages)
+	{
+		$this->pages = $pages;
+	}
+	
+	/**
+	 * Returns the corresponding file of the page
+	 * 
+	 * if it wasn't found will return false
+	 * 
+	 * @param string page page name
+	 * @return string file name if exists, false if not
+	 */
+	public function getFile($page)
+	{
+		if(isset($this->pages[$page]) && 
+			file_exists(THEMES.$Alexya->theme_name."/".$this->pages[$page])) {
+			return $this->pages[$page];
 		}
 		
 		return false;

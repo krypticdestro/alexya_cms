@@ -20,10 +20,11 @@ class Session
      * 
      * @return false if login failed
      */
-    public function login($username, $password)
+    public static function login($username, $password)
     {
         global $Database;
         global $Alexya;
+        global $Controller;
         
 		/**
 		 * Can continue, boolean
@@ -35,19 +36,19 @@ class Session
         //check username
         if(empty($username)) {
             Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Username can't be empty!"
 					));
 			$can_continue = false;
         } else if(strlen($username) < $Alexya->min_username_length) {
             Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Username can't be shorter than $Alexya->min_username_length characters!"
 					));
 			$can_continue = false;
         } else if(strlen($username) > $Alexya->max_username_length) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Username can't be longer than $Alexya->max_username_length characters!"
 					));
 			$can_continue = false;
@@ -56,20 +57,20 @@ class Session
         //check password
         if(empty($password)) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Password can't be empty!"
 					));
 			$can_continue = false;
         } else if(strlen($password) < $Alexya->min_password_length) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Password can't be shorter than $Alexya->min_password_length characters!"
 					));
 			$can_continue = false;
-        } else if(strlen($password) > $Alexya->max_password_lenght) {
+        } else if(strlen($password) > $Alexya->max_password_length) {
 			Results::addFlash(array(
-						"result" => "error",
-						"message" => "Password can\'t be longer than $Alexya->max_password_lenght characters!"
+						"result" => "danger",
+						"message" => "Password can't be longer than $Alexya->max_password_length characters!"
 					));
 			$can_continue = false;
         }
@@ -79,30 +80,30 @@ class Session
             $password = md5($password);
             
             //check username/pass exists
-            $username_pass = $Database->query("SELECT * FROM accounts WHERE username='$username' && password='$password'");
+            $username_pass = $Database->query("SELECT * FROM users WHERE username='$username' && password='$password'");
             
             if($username_pass && $username_pass->num_rows == 1) {
                 $user      = $username_pass->fetch_assoc();
                 $sessionID = $Controller->generate_sessionID();
                 
                 //Update sessionID
-                $update_sessionID = $Database->update("accounts", array("sessionID" => $sessionID), $user["userID"]);
+                $update_sessionID = $Database->update("users", array("sessionID" => $sessionID), $user["userID"]);
                 if($update_sessionID == true) {
                     $_SESSION["sessionID"] = $sessionID;
 					Results::addFlash(array(
 								"result" => "success",
 								"message" => "You're now logged!"
 							));
-                    Functions::redirect(URL."?page=home");
+                    Functions::redirect(URL."home/");
                 } else {
 					Results::addFlash(array(
-								"result" => "error",
+								"result" => "danger",
 								"message" => "Couldn't update sessionID!"
 							));
                 }
             } else {
 				Results::addFlash(array(
-							"result" => "error",
+							"result" => "danger",
 							"message" => "Wrong username/password, please try again!"
 						));
             }
@@ -127,6 +128,7 @@ class Session
     {
         global $Database;
         global $Alexya;
+        global $Controller;
 		
 		/**
 		 * Can continue, boolean
@@ -138,19 +140,19 @@ class Session
         //check username
         if(empty($username)) {
             Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Username can't be empty!"
 					));
 			$can_continue = false;
         } else if(strlen($username) < $Alexya->min_username_length) {
             Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Username can't be shorter than $Alexya->min_username_length characters!"
 					));
 			$can_continue = false;
         } else if(strlen($username) > $Alexya->max_username_length) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Username can't be longer than $Alexya->max_username_length characters!"
 					));
 			$can_continue = false;
@@ -159,20 +161,20 @@ class Session
         //check password
         if(empty($password)) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Password can't be empty!"
 					));
 			$can_continue = false;
         } else if(strlen($password) < $Alexya->min_password_length) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Password can't be shorter than $Alexya->min_password_length characters!"
 					));
 			$can_continue = false;
-        } else if(strlen($password) > $Alexya->max_password_lenght) {
+        } else if(strlen($password) > $Alexya->max_password_length) {
 			Results::addFlash(array(
-						"result" => "error",
-						"message" => "Password can't be longer than $Alexya->max_password_lenght characters!"
+						"result" => "danger",
+						"message" => "Password can't be longer than $Alexya->max_password_length characters!"
 					));
 			$can_continue = false;
         }
@@ -180,13 +182,13 @@ class Session
         //check email
         if(empty($email)) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "Email can't be empty!"
 					));
 			$can_continue = false;
         } else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 			Results::addFlash(array(
-						"result" => "error",
+						"result" => "danger",
 						"message" => "The email see,s to be incorrect!"
 					));
 			$can_continue = false;
@@ -197,7 +199,7 @@ class Session
             $password = md5($password);
             
             //check username/pass exists
-            $username_exists = $Database->query("SELECT * FROM accounts WHERE username='$username'");
+            $username_exists = $Database->query("SELECT * FROM users WHERE username='$username'");
             
             if($username_exists && $username_exists->num_rows == 0) {
                 $sessionID = $Controller->generate_sessionID();
@@ -216,16 +218,16 @@ class Session
 								"result" => "success",
 								"message" => "You're now registered!"
 							));
-                    Functions::redirect(URL."?page=home");
+                    Functions::redirect(URL."home");
                 } else {
 					Results::addFlash(array(
-								"result" => "error",
+								"result" => "danger",
 								"message" => "Couldn't add user to database!"
 							));
                 }
             } else {
 				Results::addFlash(array(
-							"result" => "error",
+							"result" => "danger",
 							"message" => "Wrong username/password, please try again!"
 						));
             }

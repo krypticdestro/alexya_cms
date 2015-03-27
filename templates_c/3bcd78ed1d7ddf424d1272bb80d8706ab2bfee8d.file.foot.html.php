@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-03-23 17:25:08
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-03-26 12:31:38
          compiled from "themes/alexya/includes/foot.html" */ ?>
 <?php /*%%SmartyHeaderCode:2125926208550ff8dda68104-31055734%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3bcd78ed1d7ddf424d1272bb80d8706ab2bfee8d' => 
     array (
       0 => 'themes/alexya/includes/foot.html',
-      1 => 1427131235,
+      1 => 1427373088,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'database' => 0,
     'Alexya' => 0,
     'cat' => 0,
-    'result' => 0,
+    'alexya' => 0,
+    'u' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
@@ -71,8 +72,24 @@ category/<?php echo $_smarty_tpl->tpl_vars['cat']->value["permalink"];?>
 	                </div>
 	                <!-- Side Widget Well -->
 	                <div class="well">
-	                    <h4>Side Widget Well</h4>
-	                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
+	                    <h4>Latest users</h4>
+	                    <ul>
+	                    <?php  $_smarty_tpl->tpl_vars['u'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['u']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['database']->value->get("users","ORDER BY date DESC"); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['u']->key => $_smarty_tpl->tpl_vars['u']->value) {
+$_smarty_tpl->tpl_vars['u']->_loop = true;
+?>
+	                    	<li><a href="<?php echo $_smarty_tpl->tpl_vars['alexya']->value->url;?>
+user/<?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
+"><?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
+ (<?php echo $_smarty_tpl->tpl_vars['u']->value["date"];?>
+)</a></li>
+	                    <?php }
+if (!$_smarty_tpl->tpl_vars['u']->_loop) {
+?>
+	                    	<li>No users registered yet!</li>
+	                    <?php } ?>
+	                    </ul>
 	                </div>
 	            </div>
 	        </div>
@@ -82,27 +99,6 @@ category/<?php echo $_smarty_tpl->tpl_vars['cat']->value["permalink"];?>
 			<footer>
 				<div class="row">
 					<div class="col-lg-12">
-				<?php  $_smarty_tpl->tpl_vars['result'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['result']->_loop = false;
- $_from = Results::get(); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
-foreach ($_from as $_smarty_tpl->tpl_vars['result']->key => $_smarty_tpl->tpl_vars['result']->value) {
-$_smarty_tpl->tpl_vars['result']->_loop = true;
-?>
-						<div class="alert alert-<?php echo $_smarty_tpl->tpl_vars['result']->value["result"];?>
- alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-  							<?php echo $_smarty_tpl->tpl_vars['result']->value["message"];?>
-
-  						</div>
-				<?php }
-if (!$_smarty_tpl->tpl_vars['result']->_loop) {
-?>
-						<div class="alert alert-info alert-dismissible">
-  							<button type="button" class="close" data-dismiss="alert">&times;</button>
-  							No results!
-  						</div>
-						<?php echo Functions::dump_session();?>
-
-				<?php } ?>
 						<p>Copyright &copy; Powered by Alexya</p>
 					</div>
 					<!-- /.col-lg-12 -->

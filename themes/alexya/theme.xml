@@ -1,4 +1,5 @@
 <theme>
+	<handler>handler_files/handler.php</handler>
 	<info>
 		<name>Alexya</name>
 		<author>Kryptic Destro</author>

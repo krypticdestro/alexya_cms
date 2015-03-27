@@ -23,18 +23,21 @@ class Security
 		//Check if Alexya is private
 		if($Alexya->is_private) {
 			//Now check that user is logged
-			if(!$User->isLogged()) {
-				//And finally check that the page isn't login or register
-				if($_GET["page"] != "login" || $_GET["page"] != "register") {
-					//Add a message to show when the user reloads the page
-					Results::addFlash(array(
-									"result" => "error",
-									"message" => "You must be loged in order to see this site!"
-								)
-							 );
-					//Redirect
-					Functions::redirect("?page=login");
-				}
+			if($User->isLogged()) {
+				return true;
+			}
+			//And finally check that the page isn't login or register
+			if(isset($_GET["action"])        &&
+				(($_GET["action"] != "login") &&
+				($_GET["action"] != "register"))) {
+				//Add a message to show when the user reloads the page
+				Results::addFlash(array(
+								"result" => "danger",
+								"message" => "You must be loged in order to see this site!"
+							)
+						 );
+				//Redirect
+				Functions::redirect(URL."login/");
 			}
 		}
 		

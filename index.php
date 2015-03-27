@@ -11,13 +11,12 @@
 require_once("globConfig.php");
 
 //Redirect user if he cant access the page
-//$Controller->user_can_access_website();
+$Controller->check_user_has_access();
 
 //assign menu to Smarty
 $menu = $Database->get("menu", "WHERE visible=1 ORDER BY position");
 $SmartyLoader->add("menu", $menu);
 
-//$Controller->test($_GET);
 
-//Load page
-$Alexya->theme->load("index");
+//Call theme handler
+$Alexya->theme->handler();

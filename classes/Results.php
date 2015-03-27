@@ -47,9 +47,9 @@ class Results
 	 */
 	public static function addFlash(array $result)
 	{
-		echo "result added, if you don't see a result in the footer I suck";
-		if(!isset($result["delete_if_not_show"])) {
-			$result["delete_if_not_show"] = true;
+		debug_print_backtrace();
+		if(!isset($result["delete_if_not_shown"])) {
+			$result["delete_if_not_shown"] = true;
 		}
 		
 		$_SESSION["results"][] = array(
@@ -88,19 +88,21 @@ class Results
 	{
 		$max = $amount - 1;
 		$results = array();
+		$array   = array();
 		
 		//check amount of items to return
 		if($amount == 0) {
-			$max = Results::getAmount() - 1;
+			$max = Results::getAmount();
 		} else {
 			if($amount > $Results::getAmount()) {
-				$max = Results::getAmount() - 1;
+				$max = Results::getAmount();
 			}
 		}
 		
 		//Add items to the array
 		for($i = 0; $i < $max; $i++) {
 			$results[] = $_SESSION["results"][$i];
+			$array[]   = $_SESSION["results"][$i]["array"];
 		}
 		
 		//Delete rest of items
@@ -114,7 +116,7 @@ class Results
 			//Check item isn't in results array
 			foreach($results as $item) {
 				if($item["id"] == $result["id"]   &&
-				   $result["delete_if_not_shown"] == false) {
+				   $result["array"]["delete_if_not_shown"] == false) {
 					$delete = false;
 					break;
 				}
@@ -126,7 +128,7 @@ class Results
 			}
 		}
 		
-		return $results;
+		return $array;
 	}
 }
 
