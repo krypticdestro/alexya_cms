@@ -19,6 +19,14 @@
  */
 define("DEBUG", true);
 
+/**
+ * Start and configure session settings
+ */
+//ini_set("session.name", "Alexya CMS");
+//ini_set("session.user_cookies", 1);
+session_save_path("tmp");
+session_start();
+
 /* Set error reporting */
 if(DEBUG) {
     ini_set("display_errors", 1);
@@ -27,11 +35,6 @@ if(DEBUG) {
     ini_set("display_errors", 0);
 }
 
-/**
- * Start and configure session settings
- */
-ini_set("session.name", "Alexya CMS");
-session_start();
 /* End Global Configuration */
 
 /* Start Path Settings */

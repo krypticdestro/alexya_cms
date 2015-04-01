@@ -17,6 +17,8 @@ class Functions
 	 */
 	public static function redirect($page)
 	{
+		//var_dump($_SESSION);
+		//die();
 	    if(headers_sent()) {
 	        echo '<script type="text/javascript">window.location.replace("'.$page.'");</script>';
 	        die();
@@ -193,7 +195,7 @@ class Functions
     
     public static function generateSessionID()
 	{
-		return self::generateRandom(32);
+		return self::generateRandom(32, true, false, "abcdef");
 	}
     
     public static function generateRandom($length, $numbers = true, $letters = false, $otherChars = ''){
@@ -203,10 +205,8 @@ class Functions
 		$chars .= $otherChars;
 
 		$str = '';
-		$c = 0;
-		while ($c < $length){ 
+		for($i = 0; $i < $length; $i++) { 
 			$str .= substr($chars, rand(0, strlen($chars) -1), 1);
-			$c++;
 		}
 		
 		return $str;

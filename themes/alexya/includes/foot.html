@@ -37,7 +37,7 @@
 	                    <h4>Latest users</h4>
 	                    <ul>
 	                    {foreach from=$database->get("users","ORDER BY date DESC") item=u}
-	                    	<li><a href="{$alexya->url}user/{$u["username"]}">{$u["username"]} ({$u["date"]})</a></li>
+	                    	<li><a href="{$Alexya->url}user/{$u["username"]}">{$u["username"]} ({$u["date"]})</a></li>
 	                    {foreachelse}
 	                    	<li>No users registered yet!</li>
 	                    {/foreach}

@@ -10,6 +10,8 @@
 //include Alexya's Core
 require_once("globConfig.php");
 
+//var_dump($_SESSION);
+
 //Redirect user if he cant access the page
 $Controller->check_user_has_access();
 

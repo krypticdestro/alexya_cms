@@ -37,7 +37,7 @@ class Security
 							)
 						 );
 				//Redirect
-				Functions::redirect(URL."login/");
+				Functions::redirect(URL."login");
 			}
 		}
 		
@@ -51,11 +51,10 @@ class Security
 	 * injection, can be used to avoid SQL injection too}
 	 *
 	 * @param string text text to parse
-	 * @param boolean bbcode if you want to parse bbcodes set this to true
 	 *
 	 * @return sanitized text
 	 */
-	public static function sanitize($text, $bbcode = false)
+	public static function sanitize($text)
 	{
 	    $table = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
         $textArray = str_split($text);
@@ -68,8 +67,6 @@ class Security
 
             $result[] = $value;
         }
-		
-		//TODO add BBCodes
 
         $str = nl2br(implode("", $result));
         $ret = str_replace("\r\n", "", $str);

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-03-26 12:31:38
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-03-31 17:04:34
          compiled from "themes/alexya/includes/foot.html" */ ?>
 <?php /*%%SmartyHeaderCode:2125926208550ff8dda68104-31055734%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3bcd78ed1d7ddf424d1272bb80d8706ab2bfee8d' => 
     array (
       0 => 'themes/alexya/includes/foot.html',
-      1 => 1427373088,
+      1 => 1427821390,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'database' => 0,
     'Alexya' => 0,
     'cat' => 0,
-    'alexya' => 0,
     'u' => 0,
   ),
   'has_nocache_code' => false,
@@ -79,7 +78,7 @@ category/<?php echo $_smarty_tpl->tpl_vars['cat']->value["permalink"];?>
 foreach ($_from as $_smarty_tpl->tpl_vars['u']->key => $_smarty_tpl->tpl_vars['u']->value) {
 $_smarty_tpl->tpl_vars['u']->_loop = true;
 ?>
-	                    	<li><a href="<?php echo $_smarty_tpl->tpl_vars['alexya']->value->url;?>
+	                    	<li><a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
 user/<?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
 "><?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
  (<?php echo $_smarty_tpl->tpl_vars['u']->value["date"];?>

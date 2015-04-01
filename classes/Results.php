@@ -47,7 +47,6 @@ class Results
 	 */
 	public static function addFlash(array $result)
 	{
-		debug_print_backtrace();
 		if(!isset($result["delete_if_not_shown"])) {
 			$result["delete_if_not_shown"] = true;
 		}

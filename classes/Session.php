@@ -90,11 +90,46 @@ class Session
                 $update_sessionID = $Database->update("users", array("sessionID" => $sessionID), $user["userID"]);
                 if($update_sessionID == true) {
                     $_SESSION["sessionID"] = $sessionID;
+                    
+                    $user = $Database->query("SELECT * FROM `users` WHERE sessionID='$sessionID'");
+                    if(is_object($user) && $user->num_rows == 1) {
+                    	$user = $user->fetch_assoc();
+                    	$ip = json_decode($user["lastIPs"]);
+                    	
+                    	if(count($ip) >= 10) {
+                    		unset($ip[0]); //delete first ip
+                    	}
+                    	
+                    	$ip[] = Functions::getIP();
+                    	
+                    	$ip = array_reverse(array_flip(array_flip(array_reverse($ip, true))));
+                    	
+                    	$update_iplog = $Database->update("users", array(
+                    							"lastIPs" => json_encode($ip)
+                    						), $user["userID"]);
+                    	if($update_iplog != true) {
+                    		Results::addFlash(array(
+                    					"result" => "danger",
+                    					"message" => "Couldn't update ip log $update_iplog!"
+                    				));
+                    	} else {
+                    		Results::addFlash(array(
+                    					"result" => "success",
+                						"message" => "IP log updated!"
+                    				));
+                    	}
+                    } else {
+                    	Results::addFlash(array(
+                    				"result" => "warning",
+                					"message" => "Couldn't find sessionID on database!"
+                    			));
+                    }
+                    
 					Results::addFlash(array(
 								"result" => "success",
 								"message" => "You're now logged!"
 							));
-                    Functions::redirect(URL."home/");
+                    Functions::redirect(URL."home");
                 } else {
 					Results::addFlash(array(
 								"result" => "danger",
@@ -209,7 +244,8 @@ class Session
 											"username"  => $username,
 											"password"  => $password,
 											"email"     => $email,
-											"sessionID" => $sessionID
+											"sessionID" => $sessionID,
+											"ip"		=> Functions::getIP()
 										));
 				
                 if(is_numeric($userID)) {
