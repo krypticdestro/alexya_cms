@@ -26,6 +26,13 @@ $pages = array(
          * Login page
          */
         "login" => "login.html",
+        
+        /**
+         * Logout page
+         * 
+         * Same as login because will be handled through events
+         */
+        "logout" => "login.html",
     
         /**
          * Reguister page
@@ -37,44 +44,23 @@ $pages = array(
         /**
          * Post page
          */
-        "post" => "post.html",
+        "posts" => "posts.html",
     
         /**
          * User page
          */
-        "user" => "user.html",
+        "users" => "users.html",
+        
+        /**
+         * Category page
+         */
+        "category" => "category.html",
         
         /**
          * 404 page
          */
         "404" => "404.html",
     );
-
-if(!isset($_GET["action"])) {
-    Functions::redirect(URL."home/");
-}
-
-if(isset($pages[$_GET["action"]])) {
-    $file = $pages[$_GET["action"]];
-} else {
-    $file = false;
-}
-
-if(is_string($file)) {
-	load_page($file);
-} else {
-	$not_found = $this->getFile("404");
-	if(is_string($not_found)) {
-		load_page($not_found);
-	} else {
-		$home_page = $this->getFile("home");
-		if(is_string($home_page)) {
-			Functions::redirect(URL."home/");
-		} else {
-			die("Your theme is shit, use another");
-		}
-	}
-}//fool proof
 
 /**
  * Loads Smarty template
@@ -122,14 +108,98 @@ $events = array(
                                     "message" => "Please, fill the form and try again!"
                                 ));
                     }
+                },
+                "post_comment" => function() {
+                    global $Database;
+                    global $User;
+                    
+                    //Check if info is setted
+                    if(isset($_POST["content"], $_GET["posts"]) && !empty($_POST["content"])) {
+                        $text = Security::sanitize($_POST["content"]);
+                        //Get postID
+                        $post = $Database->get("posts", "*", [
+                                                        "permalink" => $_GET["posts"]
+                                                    ]
+                                                );
+                        if(is_array($post)) {
+                            $postID = $post["postID"];
+                        } else {
+                            Results::addFlash(array(
+                                        "result" => "danger",
+                                        "message" => "The post wasn't found in database!"
+                                    ));
+                            return;
+                        }
+                        
+                        //Build query
+                        $query = $Database->insert("comments", array(
+                                        "postID" => $postID,
+                                        "authorID" => $User->userID,
+                                        "content" => $text
+                                    ));
+                        if(is_numeric($query)) {
+                            Results::addFlash(array(
+                                        "result" => "success",
+                                        "message" => "Post added!"
+                                    ));
+                        } else {
+                            Results::addFlash(array(
+                                        "result" => "danger",
+                                        "message" => "Couldn't add post in database $query!"
+                                    ));
+                        }
+                    } else {
+                        Results::addFlash(array(
+                                    "result" => "danger",
+                                    "message" => "Comment can't be empty!"
+                                ));
+                    }
                 }
             )
         ),
     "get" => array(
+            "action" => array(
+                "logout" => function() {
+                    if(isset($_SESSION["sessionID"])) {
+                        session_unset("sessionID");
+                        Results::addFlash(array(
+                                    "result" => "success",
+                                    "message" => "You've successfully logged out!"
+                                ));
+                        Functions::redirect(URL."home");
+                    }
+                }
+            )
         )
     );
 $GLOBALS["EventController"]->addEvents($events);
 $GLOBALS["EventController"]->listen();
+
+if(!isset($_GET["action"])) {
+    Functions::redirect(URL."home");
+}
+
+if(isset($pages[$_GET["action"]])) {
+    $file = $pages[$_GET["action"]];
+} else {
+    $file = false;
+}
+
+if(is_string($file)) {
+	load_page($file);
+} else {
+	$not_found = $this->getFile("404");
+	if(is_string($not_found)) {
+		load_page($not_found);
+	} else {
+		$home_page = $this->getFile("home");
+		if(is_string($home_page)) {
+			Functions::redirect(URL."home");
+		} else {
+			die("Your theme is shit, use another");
+		}
+	}
+}//fool proof
 
 foreach(Results::get() as $result) {
     echo	'<div class="alert alert-'.$result["result"].' alert-dismissible">

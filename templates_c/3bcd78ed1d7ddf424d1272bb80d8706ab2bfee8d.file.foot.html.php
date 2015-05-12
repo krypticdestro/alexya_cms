@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-03-31 17:04:34
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-05-04 12:12:30
          compiled from "themes/alexya/includes/foot.html" */ ?>
 <?php /*%%SmartyHeaderCode:2125926208550ff8dda68104-31055734%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3bcd78ed1d7ddf424d1272bb80d8706ab2bfee8d' => 
     array (
       0 => 'themes/alexya/includes/foot.html',
-      1 => 1427821390,
+      1 => 1430741468,
       2 => 'file',
     ),
   ),
@@ -23,6 +23,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'Alexya' => 0,
     'cat' => 0,
     'u' => 0,
+    'comment' => 0,
+    'author' => 0,
+    'user' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
@@ -48,7 +51,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	                        <div class="col-lg-6">
 	                            <ul class="list-unstyled">
 	                    <?php  $_smarty_tpl->tpl_vars['cat'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['cat']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['database']->value->get("categories"); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['database']->value->select("categories","*",array()); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
  $_smarty_tpl->tpl_vars['smarty']->value['foreach']['cat_sidebar']['iteration']=0;
 foreach ($_from as $_smarty_tpl->tpl_vars['cat']->key => $_smarty_tpl->tpl_vars['cat']->value) {
 $_smarty_tpl->tpl_vars['cat']->_loop = true;
@@ -71,15 +74,61 @@ category/<?php echo $_smarty_tpl->tpl_vars['cat']->value["permalink"];?>
 	                </div>
 	                <!-- Side Widget Well -->
 	                <div class="well">
-	                    <h4>Latest users</h4>
+	                    <h4>Latest posts</h4>
 	                    <ul>
 	                    <?php  $_smarty_tpl->tpl_vars['u'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['u']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['database']->value->get("users","ORDER BY date DESC"); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = Posts::get(10); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['u']->key => $_smarty_tpl->tpl_vars['u']->value) {
 $_smarty_tpl->tpl_vars['u']->_loop = true;
 ?>
 	                    	<li><a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
-user/<?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
+posts/<?php echo $_smarty_tpl->tpl_vars['u']->value["permalink"];?>
+"><?php echo $_smarty_tpl->tpl_vars['u']->value["title"];?>
+</a> (<?php echo $_smarty_tpl->tpl_vars['u']->value["date"];?>
+)</li>
+	                    <?php }
+if (!$_smarty_tpl->tpl_vars['u']->_loop) {
+?>
+	                    	<li>No posts yet!</li>
+	                    <?php } ?>
+	                    </ul>
+	                </div>
+	                <!-- Side Widget Well -->
+	                <div class="well">
+	                    <h4>Latest comments</h4>
+	                    <ul>
+	                    <?php  $_smarty_tpl->tpl_vars['comment'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['comment']->_loop = false;
+ $_from = Comments::getAll(); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['comment']->key => $_smarty_tpl->tpl_vars['comment']->value) {
+$_smarty_tpl->tpl_vars['comment']->_loop = true;
+?>
+	                    	<?php $_smarty_tpl->tpl_vars['u'] = new Smarty_variable($_smarty_tpl->tpl_vars['database']->value->get("posts","*",array("postID"=>$_smarty_tpl->tpl_vars['comment']->value["postID"])), null, 0);?>
+	                    	<?php $_smarty_tpl->tpl_vars['author'] = new Smarty_variable($_smarty_tpl->tpl_vars['database']->value->get("users","*",array("userID"=>$_smarty_tpl->tpl_vars['comment']->value["authorID"])), null, 0);?>
+	                    	<li><a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
+posts/<?php echo $_smarty_tpl->tpl_vars['u']->value["permalink"];?>
+"><?php echo $_smarty_tpl->tpl_vars['u']->value["title"];?>
+</a> (by <a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
+users/<?php echo $_smarty_tpl->tpl_vars['author']->value["username"];?>
+"><?php echo $_smarty_tpl->tpl_vars['author']->value["username"];?>
+</a>)</li>
+	                    <?php }
+if (!$_smarty_tpl->tpl_vars['comment']->_loop) {
+?>
+	                    	<li>No posts yet!</li>
+	                    <?php } ?>
+	                    </ul>
+	                </div>
+	                <!-- Side Widget Well -->
+	                <div class="well">
+	                    <h4>Latest users</h4>
+	                    <ul>
+	                    <?php  $_smarty_tpl->tpl_vars['u'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['u']->_loop = false;
+ $_from = Users::get(10); if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['u']->key => $_smarty_tpl->tpl_vars['u']->value) {
+$_smarty_tpl->tpl_vars['u']->_loop = true;
+?>
+	                    	<li><a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
+users/<?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
 "><?php echo $_smarty_tpl->tpl_vars['u']->value["username"];?>
  (<?php echo $_smarty_tpl->tpl_vars['u']->value["date"];?>
 )</a></li>
@@ -98,7 +147,15 @@ if (!$_smarty_tpl->tpl_vars['u']->_loop) {
 			<footer>
 				<div class="row">
 					<div class="col-lg-12">
-						<p>Copyright &copy; Powered by Alexya</p>
+						<p>
+							Copyright &copy; Powered by Alexya | 
+							<?php if ($_smarty_tpl->tpl_vars['user']->value->isLogged()) {?>
+								<a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
+logout">Logout</a>
+							<?php } else { ?>
+								<a href="<?php echo $_smarty_tpl->tpl_vars['Alexya']->value->url;?>
+login">Login/Register</a>
+							<?php }?>
 					</div>
 					<!-- /.col-lg-12 -->
 				</div>

@@ -1,0 +1,60 @@
+{if isset($smarty.get.category) && !empty($smarty.get.category)}
+    {$Category = SmartyLoader::instance_object("Category", $smarty.get.category)}
+    
+    {foreach from=$Category->getPosts() item=post name=posts}
+            {$author = $database->get("users", "*", [
+                                            "userID" => $post["authorID"]
+                                        ]
+                                    )}
+            {$comments = $database->select("comments", "*", [
+                                                "postID" => $post["postID"]
+                                            ]
+                                        )}
+            {$cat_str = ""}
+            {foreach from=json_decode($post["categories"]) item=catID name=categories}
+                {$category = SmartyLoader::instance_object("Category", $catID)}
+                {$cat_posts = count(json_decode($category->data["posts"]))}
+                {$cat_str = Functions::concatenate(array(
+                                        $cat_str,
+                                        '<a href="{$Alexya->url}category/', $category->data["permalink"], '">',
+                                        $category->data["name"],
+                                        ' (', $cat_posts, ')</a>'
+                                    ))}
+                {if $smarty.foreach.categories.last == false}
+                    {$cat_str = Functions::concatenate(array($cat_str, ", "))}
+                {/if}
+            {/foreach}
+            <div id="{$post["permalink"]}" style="position: relative;">
+                <a class="btn btn-primary" style="float: right;">{count($comments)} Comments</a>
+                <!-- First Blog Post -->
+                <h2>
+                    <a href="{$Alexya->url}posts/{$post["permalink"]}">{$post["title"]}</a>
+                </h2>
+                <p>
+                    by <a href="{$Alexya->url}users/{$author["username"]}">{$author["username"]}</a> on <small>{$cat_str}</small>
+                    <span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}
+                </p>
+                <hr>
+                
+                <img class="img-responsive" src="http://placehold.it/900x300&text={$post["title"]}" alt="">
+                <hr>
+                {$jbbcode->parse(Functions::trim_text($post["content"]))}
+                <p>{$jbbcode->getAsHtml()}</p>
+                <a class="btn btn-primary" href="{$Alexya->url}posts/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <hr>
+            </div>
+        {foreachelse}
+            <p>The category doesn't exists or hasn't got any post yet!</p>
+        {/foreach}
+                <!-- Pager --
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#">&larr; Older</a>
+                    </li>
+                    <li class="next">
+                        <a href="#">Newer &rarr;</a>
+                    </li>
+                </ul> -->
+{else}
+    <p>Please select a category!</p>
+{/if}

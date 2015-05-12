@@ -6,13 +6,8 @@
  *
  * @author Kryptic Destro
  */
-class Database extends mysqli
+class Database extends medoo
 {
-	/**
-	 * Last query executed
-	 */
-	public $last_query;
-	
 	/**
 	 * Constructshit
 	 *
@@ -28,11 +23,14 @@ class Database extends mysqli
 	{
 		// execute parent constructor that will try to connect,
 		// use @ operator, to supress any error output
-		@parent::__construct($host, $user, $pass, $db, $port, $socket);
-		// check if connect errno is set
-		if ($this->connect_errno != 0){
-			throw new Exception($this->connect_error, $this->connect_errno);
-		}
+		@parent::__construct(array(
+                "database_type" => "mysql",
+                "database_name" => $db,
+                "server"        => $host,
+                "username"      => $user,
+                "password"      => $pass,
+                "charset"       => "utf8"
+            ));
 	}
 	
 	/**
@@ -42,7 +40,7 @@ class Database extends mysqli
 	 * @param string extra: special sql shit, like WHERE, DISTINCT...
 	 * @param int limit: max length of array, -1 = infinite >:)
 	 * @param string objectType: if null the array will be filled with rows as array, otherwhise it will be filled with that object
-	*/
+	*
 	public function get($key, $extra = null, $limit = -1, $objectType = null)
 	{
 		//Check if extra SQL is setted
@@ -68,7 +66,7 @@ class Database extends mysqli
 		 *		The array will be filled with that object type
 		 * else
 		 *		It will be filled with the "query::fetch_assoc()" result
-		 */
+		 *
 		$eval = '$query = "SELECT * FROM '.$key.$e.$l.'";
 		         $q = $this->query($query) or die($this->error."<br/>".$query);
 		         $ret = array();
@@ -93,7 +91,7 @@ class Database extends mysqli
  	 *
  	 * @param string key: name of the table
  	 * @return string primary key of table
- 	*/
+ 	*
 	public function getID($key)
 	{
 		$array = array(
@@ -122,7 +120,7 @@ class Database extends mysqli
 	 * @param string id: primary key value
 	 * @param objectType: object to return, by default: DatabaseObject
 	 * @return especified object if succeed, error if not
-	*/
+	*
 	public function getObject($table, $id, $objectType = "DatabaseObject")
 	{
 		//escape the parameters
@@ -160,8 +158,8 @@ class Database extends mysqli
 	 *
 	 * @param string table: table name
 	 * @param array variables: same as update function, too lazy to write more shit that just a psychopath (aka me) will read
-	 * @return true if succeede, error if not
-	*/
+	 * @return true if succeeded, error if not
+	*
 	public function insert($table, $variables)
 	{
 		$table = $this->real_escape_string($table);
@@ -201,7 +199,7 @@ class Database extends mysqli
 	 * @param array variables: name of cols to update (key = col name, value = ... value? YES! Value!!)
 	 * @param string id: primary key value
 	 * @return true if succeed, error if not
-	*/
+	*
 	public function update($table, $variables, $id)
 	{
 		$table = $this->real_escape_string($table);
@@ -241,7 +239,7 @@ class Database extends mysqli
 	 * @param string table: table name
 	 * @param mixed id: can be array or string, if string it will be the value of primary key (I understand myself ok?)
 	 * @return true if succed, error if not
-	*/
+	*
 	public function delete($table, $id)
 	{
 		$table = $this->real_escape_string($table);
@@ -284,7 +282,7 @@ class Database extends mysqli
 	 * @param string query Query to execute
 	 * @return int number of rows affected
 	 * @throws Exception
-	*/
+	*
 	public function getNumRows($query)
 	{
 		$q = $this->query($query);
@@ -302,7 +300,7 @@ class Database extends mysqli
 	 * @param string $sql SQL to execute
 	 * @return mysqli_result Object
 	 * @throws DBQueryException
-	*/
+	*
 	public function query($sql)
 	{
 		$this->last_query = $sql;
@@ -314,5 +312,5 @@ class Database extends mysqli
 		}
 
 		return $result;
-	}
+	}*/
 }

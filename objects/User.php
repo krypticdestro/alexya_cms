@@ -21,12 +21,12 @@ class User
 		global $Database;
 		
 		if(isset($_SESSION["sessionID"])) {
-			$query = $Database->query("SELECT * FROM `users` WHERE sessionID='".
-											$_SESSION["sessionID"]. "'");
-			if(is_object($query) && $query->num_rows == 1) {
-				$q = $query->fetch_assoc();
-				
-				$this->data = $q;
+			$query = $Database->get("users", "*", [
+									"sessionID" => $_SESSION["sessionID"]
+								]
+							);
+			if(is_array($query)) {
+				$this->data = $query;
 				
 				//Set messages
 				/*$outbox = $Database->get("messages", "WHERE authorID=".$q["userID"],
@@ -48,7 +48,7 @@ class User
 			} else {
 				session_unset("sessionID");
 				Results::addFlash(array(
-							"result" => "error",
+							"result" => "danger",
 							"message" => "Couldn't find sessionID!"
 						));
 				//Functions::redirect("login/");

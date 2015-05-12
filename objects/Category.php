@@ -33,30 +33,31 @@ class Category
     public function __construct($identifier)
     {
         global $Database;
-        
         if(is_numeric($identifier)) {
-            $data = $Database->getObject("categories", $identifier, "array");
-            
+            $data = $Database->get("categories", "*", [
+                                    "categoryID" => $identifier
+                                ]
+                            );
             if(is_array($data)) {
                 $this->data = $data;
                 $this->setPosts();
             } else {
                 Results::addFlash(array(
-                            "result"  => "error",
+                            "result"  => "danger",
                             "message" => "Couldn't find category with ID $identifier!"
                         ));
             }
         } else {
-            $perma = Security::sanitize($identifier);
-            
-            $data = $Database->query("SELECT * FROM categories WHERE permalink='$perma'");
-            
-            if(is_object($data) && $data->num_rows == 1) {
-                $this->data = $data->fetch_assoc();
+            $data = $Database->get("categories", "*", [
+                                    "permalink" => $identifier
+                                ]
+                            );
+            if(is_array($data)) {
+                $this->data = $data;
                 $this->setPosts();
             } else {
                 Results::addFlash(array(
-                            "result"  => "error",
+                            "result"  => "danger",
                             "message" => "Couldn't find category with ID $identifier!"
                         ));
             }
@@ -81,16 +82,22 @@ class Category
         
         foreach($posts as $postID) {
             if(is_numeric($postID)) {
-                $post = $Database->getObject("posts", $postID, "array");
+                $post = $Database->get("posts", "*", [
+                                        "postID" => $postID
+                                    ]
+                                );
                 
                 if(is_array($post)) {
-                    $p = $post;
+                    $p[] = $post;
                 }
             } else if(is_string($postID)) {
-                $post = $Database->query("SELECT * FROM posts WHERE permalink='$postID'");
+                $post = $Database->get("posts", "*", [
+                                        "permalink" => $postID
+                                    ]
+                                );
                 
-                if(is_object($post) && $post->num_rows == 1) {
-                    $p= $post->fetch_assoc();
+                if(count($post) == 1) {
+                    $p[] = $post;
                 }
             }
         }
@@ -124,8 +131,6 @@ class Category
             }
             
             $posts[] = $this->posts[$j];
-            
-            var_dump($posts);
             
             if((count($posts) >= $max) &&
                ($max > 0)) {

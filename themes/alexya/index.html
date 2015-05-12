@@ -1,12 +1,19 @@
         {foreach from=Posts::getAll() item=post name=posts}
-            {$author = $database->getObject("users", $post["authorID"], "array")}
+            {$author = $database->get("users", "*", [
+                                            "userID" => $post["authorID"]
+                                        ]
+                                    )}
+            {$comments = $database->select("comments", "*", [
+                                                "postID" => $post["postID"]
+                                            ]
+                                        )}
             {$cat_str = ""}
             {foreach from=json_decode($post["categories"]) item=catID name=categories}
                 {$category = SmartyLoader::instance_object("Category", $catID)}
                 {$cat_posts = count(json_decode($category->data["posts"]))}
                 {$cat_str = Functions::concatenate(array(
                                         $cat_str,
-                                        '<a href="category/', $category->data["permalink"], '">',
+                                        '<a href="{$Alexya->url}category/', $category->data["permalink"], '">',
                                         $category->data["name"],
                                         ' (', $cat_posts, ')</a>'
                                     ))}
@@ -14,23 +21,25 @@
                     {$cat_str = Functions::concatenate(array($cat_str, ", "))}
                 {/if}
             {/foreach}
-            
+            <div id="{$post["permalink"]}" style="position: relative;">
+                <a class="btn btn-primary" style="float: right;">{count($comments)} Comments</a>
                 <!-- First Blog Post -->
                 <h2>
-                    <a href="{$Alexya->url}post/{$post["permalink"]}">{$post["title"]}</a>
+                    <a href="{$Alexya->url}posts/{$post["permalink"]}">{$post["title"]}</a>
                 </h2>
                 <p>
-                    by <a href="{$Alexya->url}user/{$author["username"]}">{$author["username"]}</a> on <small>{$cat_str}</small>
+                    by <a href="{$Alexya->url}users/{$author["username"]}">{$author["username"]}</a> on <small>{$cat_str}</small>
                     <span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}
                 </p>
                 <hr>
                 
-                <img class="img-responsive" src="{$post["image"]}" alt="">
+                <img class="img-responsive" src="http://placehold.it/900x300&text={$post["title"]}" alt="">
                 <hr>
-                
-                <p>{Functions::trim_text($post["content"])}</p>
-                <a class="btn btn-primary" href="{$Alexya->url}/post/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                {$jbbcode->parse(Functions::trim_text($post["content"]))}
+                <p>{$jbbcode->getAsHtml()}</p>
+                <a class="btn btn-primary" href="{$Alexya->url}posts/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
                 <hr>
+            </div>
         {/foreach}
                 <!-- Pager --
                 <ul class="pager">

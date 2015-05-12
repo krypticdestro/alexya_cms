@@ -36,6 +36,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                     {foreach from=$menu item=item name=menu}
+                        {$item["link"] = str_replace("{ldelim}url{rdelim}", $Alexya->url, $item["link"])}
                         <li>
                             <a href="{$item["link"]}">{$item["text"]}</a>
                         </li>

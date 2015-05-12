@@ -1,0 +1,151 @@
+{if isset($smarty.get.users) && !empty($smarty.get.users)}
+    {$user_page = $database->get("users", "*", [
+                                    "username" => $smarty.get.users
+                                ]
+                            )}
+    {if is_array($user_page)}
+        <h1>{$user_page["username"]}</h1>
+        <div>
+            <div class="user_header" >
+                <img class="img-responsive" src="{$Alexya->theme->paths->img}default_avatar.jpg" style="float: left; width: 250px; heigh: 250px" />
+                <p style="padding-left: 20px">
+                    Registered on {$user_page["date"]}<br/>
+                    Last login on {Functions::getTimeStamp($user_page["lastLogin"])}
+                </p>
+                <br style="clear: both;" />
+            </div>
+            <div class="user_comments">
+                <h2>Comments</h2>
+            {foreach from=$database->select("comments", "*", [
+                                                "authorID" => $user_page["userID"]
+                                            ]
+                                        ) item=comment name=comments}
+                {$where_post = Functions::concatenate(array(
+                                            "WHERE postID=",
+                                            $comment["postID"]
+                                        ))}
+                {$post = $database->get("posts", "*", [
+                                            "postID" => $comment["postID"]
+                                        ]
+                                    )}
+                {$author = $database->get("users", "*", [
+                                                "userID" => $post["authorID"]
+                                            ]
+                                        )}
+                {$comments = $database->select("comments", "*", [
+                                                "authorID" => $user_page["userID"]
+                                            ]
+                                        )}
+                {$cat_str = ""}
+                {foreach from=json_decode($post["categories"]) item=catID name=categories}
+                    {$category = SmartyLoader::instance_object("Category", $catID)}
+                    {$cat_posts = count(json_decode($category->data["posts"]))}
+                    {$cat_str = Functions::concatenate(array(
+                                            $cat_str,
+                                            '<a href="{$Alexya->url}category/', $category->data["permalink"], '">',
+                                            $category->data["name"],
+                                            ' (', $cat_posts, ')</a>'
+                                        ))}
+                    {if $smarty.foreach.categories.last == false}
+                        {$cat_str = Functions::concatenate(array($cat_str, ", "))}
+                    {/if}
+                {/foreach}
+                <hr>
+                <div id="{$post["permalink"]}" style="position: relative;">
+                    <a class="btn btn-primary" style="float: right;">{count($comments)} Comments</a>
+                    <!-- First Blog Post -->
+                    <h2>
+                        <a href="{$Alexya->url}posts/{$post["permalink"]}">{$post["title"]}</a>
+                    </h2>
+                    <p>
+                        by <a href="{$Alexya->url}users/{$author["username"]}">{$author["username"]}</a> on <small>{$cat_str}</small>
+                        <span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}
+                    </p>
+                    <hr>
+                    
+                    <img class="img-responsive" src="http://placehold.it/900x300&text={$post["title"]}" alt="">
+                    <hr>
+                    {$jbbcode->parse(Functions::trim_text($comment["content"]))}
+                    <p>{$jbbcode->getAsHtml()}</p>
+                    <a class="btn btn-primary" href="{$Alexya->url}posts/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <hr>
+                </div>
+            {/foreach}
+            </div>
+            <div class="user_comments">
+                <h2>Posts</h2>
+            {foreach from=$database->select("posts", "*", [
+                                                "authorID" => $user_page["userID"]
+                                            ]
+                                        ) item=post name=posts}
+                {$comments = $database->select("comments", "*", [
+                                                "postID" => $comment["postID"]
+                                            ]
+                                        )}
+                {$cat_str = ""}
+                {foreach from=json_decode($post["categories"]) item=catID name=categories}
+                    {$category = SmartyLoader::instance_object("Category", $catID)}
+                    {$cat_posts = count(json_decode($category->data["posts"]))}
+                    {$cat_str = Functions::concatenate(array(
+                                            $cat_str,
+                                            '<a href="{$Alexya->url}category/', $category->data["permalink"], '">',
+                                            $category->data["name"],
+                                            ' (', $cat_posts, ')</a>'
+                                        ))}
+                    {if $smarty.foreach.categories.last == false}
+                        {$cat_str = Functions::concatenate(array($cat_str, ", "))}
+                    {/if}
+                {/foreach}
+                <hr>
+                <div id="{$post["permalink"]}" style="position: relative;">
+                    <a class="btn btn-primary" style="float: right;">{count($comments)} Comments</a>
+                    <!-- First Blog Post -->
+                    <h2>
+                        <a href="{$Alexya->url}posts/{$post["permalink"]}">{$post["title"]}</a>
+                    </h2>
+                    <p>
+                        by <a href="{$Alexya->url}users/{$author["username"]}">{$user->username}</a> on <small>{$cat_str}</small>
+                        <span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}
+                    </p>
+                    <hr>
+                    
+                    <img class="img-responsive" src="http://placehold.it/900x300&text={$post["title"]}" alt="">
+                    <hr>
+                    {$jbbcode->parse(Functions::trim_text($post["content"]))}
+                    <p>{$jbbcode->getAsHtml()}</p>
+                    <a class="btn btn-primary" href="{$Alexya->url}posts/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <hr>
+                </div>
+            {/foreach}
+            </div>
+        </div>
+        <!-- Blog Comments -->
+    {else}
+        <p>The user wasn't found in the database!</p>
+    {/if}
+{else}
+    {foreach from=$database->select("users", "*") item=user_page name=users}
+        <div id="{$user_page["userID"]}" style="position: relative;">
+            <!-- First Blog Post -->
+            <h2>
+                <a href="{$Alexya->url}users/{$user_page["username"]}">{$user_page["username"]}</a>
+            </h2>
+            <img class="img-responsive" src="{$Alexya->theme->paths->img}default_avatar.jpg" style="float: left; width: 150px; heigh: 150px" />
+                <p style="padding-left: 20px">
+                    Registered on {$user_page["date"]}<br/>
+                    Last login on {Functions::getTimeStamp($user_page["lastLogin"])}
+                </p>
+                <br style="clear: both;" />
+            <hr>
+        </div>
+    {/foreach}
+            <!-- Pager --
+            <ul class="pager">
+                <li class="previous">
+                    <a href="#">&larr; Older</a>
+                </li>
+                <li class="next">
+                    <a href="#">Newer &rarr;</a>
+                </li>
+            </ul> -->
+{/if}

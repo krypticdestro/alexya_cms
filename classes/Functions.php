@@ -115,15 +115,12 @@ class Functions
 	/**
      * Returns current time stamp
      */
-    public static function getTimeStamp($timestamp = 0)
+    public static function getTimeStamp($timestamp = false)
     {
-    	if($timestamp != 0) {
-    		return date("Y-m-d H:i:s",$timestamp);
+    	if($timestamp != false) {
+    		return date("Y-m-d H:i:s", $timestamp);
     	} else {
-        	$currentDate = date_create();
-        	$timestamp   = date_timestamp_get($currentDate);
-        
-        	return $timestamp;
+        	return time();
         }
     }
     
@@ -137,6 +134,7 @@ class Functions
     {
     	$text = "";
     	foreach($strings as $string) {
+    		$string = str_replace('{$Alexya->url}', URL, $string);
     		$text .= $string;
     	}
     	return $text;
@@ -192,6 +190,33 @@ class Functions
     	
     	return $path;
     }
+    
+    /**
+     * Returs a string that is inside given string
+     * 
+     * First parameter is the string
+     * Second parameter is left delimiter
+     * Third parameter is right delimiter
+     * 
+     * @param string str
+     * @param string ldelim
+     * @param string rdelim
+     * @return string between ldelim and rdelim
+     */
+	public static function get_string_between($string, $start, $end)
+	{
+	    $string = " ".$string;
+	    $ini = strpos($string,$start);
+	    
+	    if ($ini == 0) {
+	    	return "";
+	    }
+	    
+	    $ini += strlen($start);
+	    $len = strpos($string,$end,$ini) - $ini;
+	    
+	    return substr($string,$ini,$len);
+	}
     
     public static function generateSessionID()
 	{

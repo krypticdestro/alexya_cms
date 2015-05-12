@@ -10,13 +10,15 @@
 //include Alexya's Core
 require_once("globConfig.php");
 
-//var_dump($_SESSION);
-
 //Redirect user if he cant access the page
 $Controller->check_user_has_access();
 
 //assign menu to Smarty
-$menu = $Database->get("menu", "WHERE visible=1 ORDER BY position");
+$menu = $Database->select("menu", "*", [
+                    "visible" => 1
+                ]
+            );
+$menu = array_reverse($menu);
 $SmartyLoader->add("menu", $menu);
 
 

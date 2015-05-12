@@ -18,9 +18,29 @@ class Posts
     {
         global $Database;
         
-        $posts = $Database->get("posts", "ORDER BY date DESC");
+        $posts = $Database->select("posts", "*");
+        return array_reverse($posts);
+    }
+    
+    /**
+     * Returns an array containing $amount posts from database
+     * 
+     * @param int amount amount of posts to return
+     * 
+     * @return array array containing more arrays
+     */
+    public static function get($amount)
+    {
+        global $Database;
         
-        return $posts; //That pro code
+        $amount = Security::sanitize($amount);
+        
+        $posts = $Database->query("SELECT * FROM `posts` LIMIT ". $amount);
+        if(is_object($posts)) {
+            return array_reverse($posts->fetchAll());
+        }
+        
+        return false;
     }
     
     /**
@@ -38,8 +58,6 @@ class Posts
      */
     public static function getPerCategory($category)
     {
-        global $Database;
-        
         $posts = array();
         
         //check if category is an array

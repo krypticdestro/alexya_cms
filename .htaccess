@@ -1,4 +1,7 @@
 RewriteEngine on
 
-RewriteRule ^([a-zA-Z0-9]+)(/?)$ index.php?action=$1
-RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ index.php?action=$1&$1=$2
+# Redirect Trailing Slashes...
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+RewriteRule ^([a-zA-Z0-9_\-]+)$ index.php?action=$1
+RewriteRule ^([a-zA-Z0-9_\-]+)/([a-zA-Z0-9_\-]+)$ index.php?action=$1&$1=$2

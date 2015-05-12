@@ -22,6 +22,8 @@ class SmartyLoader extends Smarty
         parent::__construct();
         $this->add("database", $GLOBALS["Database"]);
 		$this->add("Alexya", $GLOBALS["Alexya"]);
+		$this->add("user", $GLOBALS["User"]);
+		$this->add("jbbcode", $GLOBALS["JBBCode"]);
     }
      
     /**

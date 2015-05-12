@@ -1,0 +1,139 @@
+{if isset($smarty.get.posts) && !empty($smarty.get.posts)}
+    {$post = $database->get("posts", "*", [
+                                "permalink" => $smarty.get.posts
+                            ]
+                        )}
+    {if is_array($post)}
+        {$author = $database->get("users", "*", [
+                                    "userID" => $post["authorID"]
+                                ]
+                            )}
+        {$comments = $database->select("comments", "*", [
+                                            "postID" => $post["postID"]
+                                        ]
+                                    )}
+        {$cat_str = ""}
+        {foreach from=json_decode($post["categories"]) item=catID name=categories}
+            {$category = SmartyLoader::instance_object("Category", $catID)}
+            {$cat_posts = count(json_decode($category->data["posts"]))}
+            {$cat_str = Functions::concatenate(array(
+                                    $cat_str,
+                                    '<a href="/category/', $category->data["permalink"], '">',
+                                    $category->data["name"],
+                                    ' (', $cat_posts, ')</a>'
+                                ))}
+            {if $smarty.foreach.categories.last == false}
+                {$cat_str = Functions::concatenate(array($cat_str, ", "))}
+            {/if}
+        {/foreach}
+        <!-- de aquí en adelante el post existe -->
+        <h1>{$post["title"]}</h1>
+        
+        <p>
+            by <a href="{$Alexya->url}user/{$author["username"]}">{$author["username"]}</a> on <small>{$cat_str}</small>
+            <span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}
+        </p>
+        <hr>
+        
+        <img class="img-responsive" src="http://placehold.it/900x300&text={$post["title"]}" alt="" />
+        <hr>
+        <!-- content op -->
+        {$jbbcode->parse($post["content"])}
+        {$jbbcode->getAsHtml()}
+        <hr>
+        <!-- Blog Comments -->
+        <!-- Comments Form -->
+        <div class="well">
+            <h4>Leave a Comment:</h4>
+            <form role="form" method="post" action="/posts/{$post["permalink"]}">
+                <input type="hidden" name="subaction" value="post_comment" />
+                <div class="form-group">
+                    <textarea name="content" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <hr>
+        <!-- Posted Comments -->
+        {foreach from=$comments item=comment name=freach_comments}
+            {$comment_author = $database->get("users", "*", [
+                                                "userID" => $comment["authorID"]
+                                            ]
+                                        )}
+        <!-- Comment -->
+        <div class="media">
+            <a class="pull-left" href="/users/{$comment_author["username"]}">
+                <img class="media-object" src="{$Alexya->theme->paths->img}default_avatar.jpg" style="width: 150px; heigh: 150px">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">{$comment_author["username"]}
+                    <small>{$comment["date"]}</small>
+                </h4>
+                {$jbbcode->parse($comment["content"])}
+                {$jbbcode->getAsHtml()}
+            </div>
+        </div>
+        {foreachelse}
+        <div class="media">
+            <div class="media-body">
+                No comments yet!
+            </div>
+        </div>
+        {/foreach}
+    {else}
+        <p>The post wasn't found in the database!</p>
+    {/if}
+{else}
+    {foreach from=Posts::getAll() item=post name=posts}
+        {$author = $database->get("users", "*", [
+                                    "authorID" => $post["authorID"]
+                                ]
+                            )}
+        {$comments = $database->select("comments", "*", [
+                                            "postID" => $post["postID"]
+                                        ]
+                                    )}
+        {$cat_str = ""}
+        {foreach from=json_decode($post["categories"]) item=catID name=categories}
+            {$category = SmartyLoader::instance_object("Category", $catID)}
+            {$cat_posts = count(json_decode($category->data["posts"]))}
+            {$cat_str = Functions::concatenate(array(
+                                    $cat_str,
+                                    '<a href="{$Alexya->url}category/', $category->data["permalink"], '">',
+                                    $category->data["name"],
+                                    ' (', $cat_posts, ')</a>'
+                                ))}
+            {if $smarty.foreach.categories.last == false}
+                {$cat_str = Functions::concatenate(array($cat_str, ", "))}
+            {/if}
+        {/foreach}
+        <div id="{$post["permalink"]}" style="position: relative;">
+            <a class="btn btn-primary" style="float: right;">{count($comments)} Comments</a>
+            <!-- First Blog Post -->
+            <h2>
+                <a href="{$Alexya->url}posts/{$post["permalink"]}">{$post["title"]}</a>
+            </h2>
+            <p>
+                by <a href="{$Alexya->url}users/{$author["username"]}">{$author["username"]}</a> on <small>{$cat_str}</small>
+                <span class="glyphicon glyphicon-time"></span> Posted on {$post["date"]}
+            </p>
+            <hr>
+            
+            <img class="img-responsive" src="http://placehold.it/900x300&text={$post["title"]}" alt="">
+            <hr>
+            {$jbbcode->parse(Functions::trim_text($post["content"]))}
+            <p>{$jbbcode->getAsHtml()}</p>
+            <a class="btn btn-primary" href="{$Alexya->url}posts/{$post["permalink"]}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <hr>
+        </div>
+    {/foreach}
+            <!-- Pager --
+            <ul class="pager">
+                <li class="previous">
+                    <a href="#">&larr; Older</a>
+                </li>
+                <li class="next">
+                    <a href="#">Newer &rarr;</a>
+                </li>
+            </ul> -->
+{/if}

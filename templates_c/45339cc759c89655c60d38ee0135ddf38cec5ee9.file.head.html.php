@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-03-23 17:32:17
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-04-05 18:03:52
          compiled from "themes/alexya/includes/head.html" */ ?>
 <?php /*%%SmartyHeaderCode:719934045550ff8dd9242c8-94956882%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '45339cc759c89655c60d38ee0135ddf38cec5ee9' => 
     array (
       0 => 'themes/alexya/includes/head.html',
-      1 => 1427131617,
+      1 => 1428257030,
       2 => 'file',
     ),
   ),
@@ -76,6 +76,12 @@ main.css" rel="stylesheet">
 foreach ($_from as $_smarty_tpl->tpl_vars['item']->key => $_smarty_tpl->tpl_vars['item']->value) {
 $_smarty_tpl->tpl_vars['item']->_loop = true;
 ?>
+                        <?php ob_start();
+{
+$_tmp1=ob_get_clean();?><?php ob_start();
+}
+$_tmp2=ob_get_clean();?><?php $_smarty_tpl->createLocalArrayVariable('item', null, 0);
+$_smarty_tpl->tpl_vars['item']->value["link"] = str_replace($_tmp1."url".$_tmp2,$_smarty_tpl->tpl_vars['Alexya']->value->url,$_smarty_tpl->tpl_vars['item']->value["link"]);?>
                         <li>
                             <a href="<?php echo $_smarty_tpl->tpl_vars['item']->value["link"];?>
 "><?php echo $_smarty_tpl->tpl_vars['item']->value["text"];?>

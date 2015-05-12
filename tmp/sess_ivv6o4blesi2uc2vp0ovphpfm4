@@ -1,0 +1,1 @@
+results|a:2:{i:0;a:3:{s:2:"id";i:0;s:12:"is_permanent";b:0;s:5:"array";a:3:{s:6:"result";s:5:"error";s:7:"message";s:24:"Couldn't find sessionID!";s:19:"delete_if_not_shown";b:1;}}i:1;a:3:{s:2:"id";i:1;s:12:"is_permanent";b:0;s:5:"array";a:3:{s:6:"result";s:6:"danger";s:7:"message";s:44:"You must be loged in order to see this site!";s:19:"delete_if_not_shown";b:1;}}}

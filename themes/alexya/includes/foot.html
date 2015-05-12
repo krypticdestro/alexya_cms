@@ -19,7 +19,7 @@
 	                    <div class="row">
 	                        <div class="col-lg-6">
 	                            <ul class="list-unstyled">
-	                    {foreach from=$database->get("categories") item=cat name=cat_sidebar}
+	                    {foreach from=$database->select("categories", "*", []) item=cat name=cat_sidebar}
 	                                <li><a href="{$Alexya->url}category/{$cat["permalink"]}">{$cat["name"]}</a></li>
 	                        {if ($smarty.foreach.cat_sidebar.iteration % 6) == 0}
 	                        	</ul>
@@ -34,10 +34,40 @@
 	                </div>
 	                <!-- Side Widget Well -->
 	                <div class="well">
+	                    <h4>Latest posts</h4>
+	                    <ul>
+	                    {foreach from=Posts::get(10) item=u}
+	                    	<li><a href="{$Alexya->url}posts/{$u["permalink"]}">{$u["title"]}</a> ({$u["date"]})</li>
+	                    {foreachelse}
+	                    	<li>No posts yet!</li>
+	                    {/foreach}
+	                    </ul>
+	                </div>
+	                <!-- Side Widget Well -->
+	                <div class="well">
+	                    <h4>Latest comments</h4>
+	                    <ul>
+	                    {foreach from=Comments::getAll() item=comment}
+	                    	{$u = $database->get("posts", "*", [
+	                    						"postID" => $comment["postID"]
+	                    					]
+	                    				)}
+	                    	{$author = $database->get("users", "*", [
+	                    							"userID" => $comment["authorID"]
+	                    						]
+	                    					)}
+	                    	<li><a href="{$Alexya->url}posts/{$u["permalink"]}">{$u["title"]}</a> (by <a href="{$Alexya->url}users/{$author["username"]}">{$author["username"]}</a>)</li>
+	                    {foreachelse}
+	                    	<li>No posts yet!</li>
+	                    {/foreach}
+	                    </ul>
+	                </div>
+	                <!-- Side Widget Well -->
+	                <div class="well">
 	                    <h4>Latest users</h4>
 	                    <ul>
-	                    {foreach from=$database->get("users","ORDER BY date DESC") item=u}
-	                    	<li><a href="{$Alexya->url}user/{$u["username"]}">{$u["username"]} ({$u["date"]})</a></li>
+	                    {foreach from=Users::get(10) item=u}
+	                    	<li><a href="{$Alexya->url}users/{$u["username"]}">{$u["username"]} ({$u["date"]})</a></li>
 	                    {foreachelse}
 	                    	<li>No users registered yet!</li>
 	                    {/foreach}
@@ -51,7 +81,13 @@
 			<footer>
 				<div class="row">
 					<div class="col-lg-12">
-						<p>Copyright &copy; Powered by Alexya</p>
+						<p>
+							Copyright &copy; Powered by Alexya | 
+							{if $user->isLogged()}
+								<a href="{$Alexya->url}logout">Logout</a>
+							{else}
+								<a href="{$Alexya->url}login">Login/Register</a>
+							{/if}
 					</div>
 					<!-- /.col-lg-12 -->
 				</div>
